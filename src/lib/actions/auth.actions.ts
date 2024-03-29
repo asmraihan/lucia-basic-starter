@@ -8,6 +8,8 @@ import { SignInSchema, SignUpSchema } from "../../../zod/auth.schemas";
 
 import { lucia, validateRequest } from "@/lib/lucia/luciaAuth";
 import { prisma } from "../../../prisma/prismaClient";
+import { generateCodeVerifier, generateState } from "arctic";
+import { google } from "../lucia/oauth";
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   try {
@@ -133,3 +135,43 @@ export const signOut = async () => {
     };
   }
 };
+
+
+export const createGoogleAuthorizationURL = async () => {
+ try {
+  const state = generateState();
+  const codeVerifier = generateCodeVerifier();
+
+  cookies().set("codeVerifier", codeVerifier, {
+    httpOnly: true,
+    // secure: process.env.NODE_ENV === "production",
+    // sameSite: "strict",
+  });
+
+  cookies().set("state", state, {
+    httpOnly: true,
+    // secure: process.env.NODE_ENV === "production",
+    // sameSite: "strict",
+  });
+  
+  const authorizationURL = await google.createAuthorizationURL(
+    state, 
+    codeVerifier,
+    {
+      scopes: ["email", "profile"],
+    }
+    );
+
+  return {
+    success: true,
+    data: authorizationURL
+  }
+
+ } catch (error : any) {
+    return {
+      error: error?.message
+    }
+ }
+}
+
+// const tokens = await github.validateAuthorizationCode(code);

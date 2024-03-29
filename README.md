@@ -1,6 +1,14 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-This project is a simple authentication and authorization system using Next.js, Prisma with lucia auth.
+This project is a authentication and authorization system using Next.js, Prisma with lucia auth.
+
+## Includes
+* username and password authentication
+* email verification
+* google, github & discord oauth
+* password reset
+* role based authorization
+
 
 ## Getting Started
 
