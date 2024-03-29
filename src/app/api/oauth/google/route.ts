@@ -165,6 +165,18 @@ export const GET = async (req: NextRequest) => {
             sessionCookie.attributes,
         );
 
+        cookies().set(
+            "state", "", {
+            expires: new Date(0),
+            }
+        )
+
+        cookies().set(
+            "codeVerifier", "", {
+            expires: new Date(0),
+            }
+        )
+
         return NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_BASE_URL), {
             status: 302
         })
